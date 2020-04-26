@@ -3,6 +3,7 @@ import 'package:covid_19/widgets/counter.dart';
 import 'package:covid_19/widgets/my_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:covid_19/Covid19.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,14 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controller.addListener(onScroll);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     controller.dispose();
     super.dispose();
   }
@@ -52,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
       offset = (controller.hasClients) ? controller.offset : 0;
     });
   }
+  String dropdownValue = "Malaysia";
 
   @override
   Widget build(BuildContext context) {
@@ -87,19 +87,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       isExpanded: true,
                       underline: SizedBox(),
                       icon: SvgPicture.asset("assets/icons/dropdown.svg"),
-                      value: "Indonesia",
+                      value: dropdownValue,
+                      onChanged: (String newValue) async {
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
+                        var covid19 = new Covid19();
+                        var data = await covid19.getStatistic();
+                        print(data);
+                      },
                       items: [
+                        "Malaysia",
                         'Indonesia',
-                        'Bangladesh',
+                        'Singapore',
                         'United States',
-                        'Japan'
+                        'Japan',
+                        "Korea"
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
                         );
                       }).toList(),
-                      onChanged: (value) {},
                     ),
                   ),
                 ],
@@ -157,17 +166,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <Widget>[
                         Counter(
                           color: kInfectedColor,
-                          number: 1046,
+                          number: 5425,
                           title: "Infected",
                         ),
                         Counter(
                           color: kDeathColor,
-                          number: 87,
+                          number: 89,
                           title: "Deaths",
                         ),
                         Counter(
                           color: kRecovercolor,
-                          number: 46,
+                          number: 3295,
                           title: "Recovered",
                         ),
                       ],
